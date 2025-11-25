@@ -1,0 +1,45 @@
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+package-lock.json
+.pnpm-store/
+
+# Environment variables
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+
+# Supabase
+supabase/.branches/
+supabase/.temp/
+supabase/.cache/
+supabase/migrations/.temp/
+supabase/functions/**/vendor/
+
+# Build output
+dist/
+build/
+.out/
+.vercel/
+.next/
+tmp/
+temp/
+
+# IDEs / Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+logs/
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
