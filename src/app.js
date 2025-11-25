@@ -4,7 +4,6 @@ const port = 3000;
 const db = require('./config/database');
 const path = require('path'); // ← AÑADE ESTA LÍNEA
 
-
 const { authenticateToken } = require('./middleware/auth');
 const authRoutes = require('./routes/auth/authRoutes');
 const githubAuthRoutes = require('./routes/auth/github');
