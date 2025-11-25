@@ -1,5 +1,10 @@
 TODO: verificar todos los require tengan bien las rutas
 
+npm install
+npm init -y
+npm install express pg jsonwebtoken bcryptjs cors dotenv swagger-jsdoc swagger-ui-express
+
+
 -------------------------------------------------------------------------------------
 Logica de coneccion a la BD y creacion de endpoints basicos
 
@@ -83,4 +88,7 @@ El usuario accede a tu API con ese JWT
 
 Sobre el acceso: Cualquier usuario que esté en tu tabla usuarios (de prueba o real) podrá acceder via login normal (email/password) O GitHub OAuth (se crea automáticamente en tu BD). Los usuarios de prueba ya funcionan, los de GitHub se crearán al hacer login por primera vez.
 
-¡¡¡OJO!!! No ejecutes el hash todavía - primero prueba el login con las passwords en texto plano. Inicia la app (npm run dev) y prueba el endpoint /auth/login con los usuarios de prueba. El JWT se genera cuando haces POST a /auth/login con email/password correctos - la respuesta incluye el token que usas en el header
+¡¡¡OJO!!! No ejecutes el hash todavía - primero prueba el login con las passwords en texto plano. 
+
+Inicia la app (npm run dev) y prueba el endpoint /auth/login con los usuarios de prueba. 
+El JWT se genera cuando haces POST a /auth/login con email/password correctos - la respuesta incluye el token que usas en el header

@@ -77,7 +77,7 @@ router.get('/callback', async (req, res) => {
 });
 
 // Función para buscar/crear usuario en tu BD
-const db = require('../../db/connection'); // Tu conexión PostgreSQL a Supabase
+const db = require('../../config/database'); // Tu conexión PostgreSQL a Supabase
 
 async function findOrCreateUserFromGitHub(githubUser) {
     const email = githubUser.email || `${githubUser.login}@github.com`;

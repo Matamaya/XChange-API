@@ -1,8 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../db/connection');
-
-const { authenticateToken } = require('../middleware/auth');
+const db = require('../../config/database');
+const { authenticateToken } = require('../../middleware/auth');
 
 /**
  * @swagger

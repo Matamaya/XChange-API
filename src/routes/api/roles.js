@@ -1,11 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../db/connection');
-const { authenticateToken } = require('../middleware/auth');
-
-
-// ruta protegida con token
-const { authenticateToken } = require('../middleware/auth');
+const db = require('../../config/database');
+const { authenticateToken } = require('../../middleware/auth');
 
 // Y modifica todas las rutas para usar el middleware: con authenticateToken
 

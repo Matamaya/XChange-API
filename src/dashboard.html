@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard - Erasmus X-Change</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            max-width: 800px; 
+            margin: 0 auto; 
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .endpoints-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .endpoint-btn {
+            background: white;
+            border: 2px solid #007bff;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            color: #333;
+        }
+        .endpoint-btn:hover {
+            background: #007bff;
+            color: white;
+            transform: translateY(-2px);
+        }
+        .data-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        pre {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .logout-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            float: right;
+        }
+        .logout-btn:hover {
+            background: #c82333;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🚀 Erasmus X-Change API Dashboard</h1>
+        <button class="logout-btn" onclick="logout()">Cerrar Sesión</button>
+        <div style="clear: both;"></div>
+    </div>
+
+    <div class="endpoints-grid">
+        <a class="endpoint-btn" href="#" onclick="loadEndpoint('/documentos')">
+            <h3>📄 Documentos</h3>
+            <p>Gestión de documentos</p>
+        </a>
+        
+        <a class="endpoint-btn" href="#" onclick="loadEndpoint('/usuarios')">
+            <h3>👥 Usuarios</h3>
+            <p>Lista de usuarios</p>
+        </a>
+        
+        <a class="endpoint-btn" href="#" onclick="loadEndpoint('/perfiles')">
+            <h3>👤 Perfiles</h3>
+            <p>Perfiles de usuario</p>
+        </a>
+        
+        <a class="endpoint-btn" href="#" onclick="loadEndpoint('/ofertas')">
+            <h3>💼 Ofertas</h3>
+            <p>Ofertas disponibles</p>
+        </a>
+        
+        <a class="endpoint-btn" href="#" onclick="loadEndpoint('/paises')">
+            <h3>🌍 Países</h3>
+            <p>Países participantes</p>
+        </a>
+        
+        <a class="endpoint-btn" href="#" onclick="loadEndpoint('/solicitudes')">
+            <h3>📋 Solicitudes</h3>
+            <p>Solicitudes de intercambio</p>
+        </a>
+    </div>
+
+    <div class="data-container">
+        <h2 id="endpoint-title">Selecciona un endpoint</h2>
+        <div id="data-content">
+            <p>Haz clic en cualquier botón de arriba para cargar los datos...</p>
+        </div>
+    </div>
+
+    <script>
+        // Verificar si hay token al cargar la página
+        window.addEventListener('load', () => {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = '/';
+            }
+        });
+
+        async function loadEndpoint(endpoint) {
+            const token = localStorage.getItem('token');
+            
+            if (!token) {
+                alert('No hay token. Redirigiendo al login...');
+                window.location.href = '/';
+                return;
+            }
+
+            try {
+                document.getElementById('endpoint-title').textContent = `📊 Datos de ${endpoint}`;
+                document.getElementById('data-content').innerHTML = '<p>⏳ Cargando datos...</p>';
+                
+                const response = await fetch(endpoint, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const data = await response.json();
+                
+                // Mostrar datos formateados
+                document.getElementById('data-content').innerHTML = `
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+                
+            } catch (error) {
+                document.getElementById('data-content').innerHTML = `
+                    <p style="color: red;">❌ Error al cargar ${endpoint}: ${error.message}</p>
+                `;
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            window.location.href = '/';
+        }
+    </script>
+</body>
+</html>

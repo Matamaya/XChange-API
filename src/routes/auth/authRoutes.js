@@ -7,6 +7,7 @@ const { generateAccessToken } = require('../../config/jwt');
 
 const router = express.Router();
 
+
 /**
  * @swagger
  * /auth/login:
@@ -44,10 +45,9 @@ router.post('/login', async (req, res) => {
   try {
     // 1. Buscar usuario en BD
     const result = await db.query(
-      `SELECT u.id_usuario, u.email, u.password, u.id_rol, r.tipo as rol_nombre
-       FROM usuarios u 
-       JOIN roles r ON u.id_rol = r.id_rol 
-       WHERE u.email = $1`,
+      `SELECT id_usuario, email, password, id_rol
+        FROM Usuarios 
+        WHERE email = $1`,
       [email]
     );
 
@@ -60,11 +60,12 @@ router.post('/login', async (req, res) => {
     const user = result.rows[0];
 
     // 2. Verificar contraseña (asumiendo que está hasheada)
-    const validPassword = await bcrypt.compare(password, user.password);
+    //const validPassword = await bcrypt.compare(password, user.password);
+    const validPassword = (password === user.password)
 
     if (!validPassword) {
       return res.status(401).json({
-        error: 'Credenciales inválidas'
+        error: 'Contraseña inválidas'
       });
     }
 
@@ -98,19 +99,22 @@ router.post('/login', async (req, res) => {
     });
   }
 
-  // Mantén tus rutas de prueba existentes
-  router.get('/test-generate', (req, res) => {
-    // ... tu código actual
-  });
 
-  router.post('/test-verify', (req, res) => {
-    // ... tu código actual
-  });
+});
 
-  router.get('/test-protected', authenticateToken, (req, res) => {
-    // ... tu código actual
-  });
-  
+
+// Elimina o comenta esto:
+router.get('/.well-known/appspecific/com.chrome.devtools.json', (req, res) => {
+  res.status(200).json({});
+});
+
+// En tu app.js o server.js
+router.use((req, res, next) => {
+  res.setHeader(
+    'Content-Security-Policy',
+    "default-src 'self'; connect-src 'self' http://localhost:3000;"
+  );
+  next();
 });
 
 module.exports = router;

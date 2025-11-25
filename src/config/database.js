@@ -7,7 +7,7 @@ const db = new Pool({
   password: 'mlmi1234', // ← LA CONTRASEÑA DE BD
   database: 'postgres',
   port: 5432,
-  ssl: { rejectUnauthorized: false },
+  //ssl: { rejectUnauthorized: false },
 
 });
 
