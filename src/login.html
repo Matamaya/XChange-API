@@ -1,91 +1,296 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="es">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Erasmus X-Change</title>
     <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #7209b7;
+            --success: #4cc9f0;
+            --danger: #f72585;
+            --warning: #f8961e;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --border-radius: 12px;
+            --box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            max-width: 400px;
-            margin: 100px auto;
-            padding: 20px;
-        }
-
-        input,
-        button {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-        }
-
-        button {
-            background: #007bff;
-            color: white;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        button:hover {
-            background: #0056b3;
-        }
-
-        .error {
-            color: red;
-            margin-top: 10px;
-        }
-
-        .github-btn {
-            background: #24292e;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            padding: 20px;
         }
 
-        .github-btn:hover {
+        .login-container {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            width: 100%;
+            max-width: 450px;
+            overflow: hidden;
+        }
+
+        .login-header {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .login-header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .login-header p {
+            opacity: 0.9;
+            font-size: 16px;
+        }
+
+        .login-body {
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+        }
+
+        .btn-github {
+            background: #24292e;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .btn-github:hover {
             background: #000;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
 
         .separator {
+            display: flex;
+            align-items: center;
+            margin: 25px 0;
+            color: var(--gray);
+        }
+
+        .separator::before,
+        .separator::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #e9ecef;
+        }
+
+        .separator span {
+            padding: 0 15px;
+            font-size: 14px;
+        }
+
+        .error {
+            background: #ffe6e6;
+            color: #d63031;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border-left: 4px solid #d63031;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .error.hidden {
+            display: none;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 42px;
+            background: none;
+            border: none;
+            color: var(--gray);
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .login-footer {
             text-align: center;
-            margin: 20px 0;
-            color: #666;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #e9ecef;
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .login-container {
+                max-width: 100%;
+            }
+            
+            .login-header {
+                padding: 25px 20px;
+            }
+            
+            .login-body {
+                padding: 25px 20px;
+            }
         }
     </style>
 </head>
 
 <body>
-    <h2>🔐 Login Erasmus X-Change</h2>
-    <form id="loginForm">
-        <input type="email" id="email" placeholder="Email" required>
-        <input type="password" id="password" placeholder="Password" required>
-        <button type="submit">Login</button>
-    </form>
-    <div id="error" class="error"></div>
-
-    <!-- Botón GitHub OAuth -->
-    <!-- En el botón GitHub, actualiza el onclick: -->
-    <button class="github-btn" onclick="window.location.href='/auth/github'">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
-            <path
-                d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-        </svg>
-        Login con GitHub
-    </button>
+    <div class="login-container">
+        <div class="login-header">
+            <h1>🔐 Erasmus X-Change</h1>
+            <p>Accede a tu cuenta para continuar</p>
+        </div>
+        
+        <div class="login-body">
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email">Correo electrónico</label>
+                    <input type="email" id="email" class="form-control" placeholder="tu@ejemplo.com" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <input type="password" id="password" class="form-control" placeholder="••••••••" required>
+                    <button type="button" class="password-toggle" id="togglePassword">Mostrar</button>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" id="loginBtn">
+                    <span>Iniciar Sesión</span>
+                </button>
+            </form>
+            
+            <div id="error" class="error hidden">
+                <span>⚠️</span>
+                <span id="errorText"></span>
+            </div>
+            
+            <div class="separator">
+                <span>O continúa con</span>
+            </div>
+            
+            <a href="/auth/github" class="btn btn-github">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                </svg>
+                Iniciar sesión con GitHub
+            </a>
+            
+            <div class="login-footer">
+                <p>¿No tienes una cuenta? <a href="#" style="color: var(--primary); text-decoration: none;">Regístrate aquí</a></p>
+            </div>
+        </div>
+    </div>
 
     <script>
-        function loginWithGitHub() {
-            // Redirigir a la ruta de GitHub OAuth
-            window.location.href = '/auth/github';
-        }
+        // Verificar si ya está logueado
+        window.addEventListener('load', () => {
+            const token = localStorage.getItem('token');
+            if (token) {
+                window.location.href = '/dashboard.html';
+            }
+        });
+
+        // Toggle para mostrar/ocultar contraseña
+        document.getElementById('togglePassword').addEventListener('click', function() {
+            const passwordInput = document.getElementById('password');
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            this.textContent = type === 'password' ? 'Mostrar' : 'Ocultar';
+        });
+
+        // Manejo del formulario de login
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-
+            
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             const errorDiv = document.getElementById('error');
-
+            const errorText = document.getElementById('errorText');
+            const loginBtn = document.getElementById('loginBtn');
+            
+            // Mostrar estado de carga
+            loginBtn.disabled = true;
+            
             try {
                 const response = await fetch('/auth/login', {
                     method: 'POST',
@@ -99,25 +304,31 @@
                     // Guardar token en localStorage
                     localStorage.setItem('token', data.token);
 
-                    // REDIRIGIR automáticamente al dashboard
+                    // Redirigir al dashboard
                     window.location.href = '/dashboard.html';
-
                 } else {
-                    errorDiv.textContent = 'Error: ' + (data.error || data.message);
+                    // Mostrar error
+                    errorText.textContent = data.error || data.message || 'Error de autenticación';
+                    errorDiv.classList.remove('hidden');
                 }
             } catch (error) {
-                errorDiv.textContent = 'Error de conexión';
+                errorText.textContent = 'Error de conexión. Inténtalo de nuevo.';
+                errorDiv.classList.remove('hidden');
+            } finally {
+                // Restaurar estado del botón
+                loginBtn.disabled = false;
+                loading.classList.add('hidden');
             }
         });
 
-        // Si ya está logueado, redirigir directamente
-        window.addEventListener('load', () => {
-            const token = localStorage.getItem('token');
-            if (token) {
-                window.location.href = '/dashboard.html';
-            }
-        });
+        // Ocultar error al empezar a escribir
+        document.getElementById('email').addEventListener('input', hideError);
+        document.getElementById('password').addEventListener('input', hideError);
+        
+        function hideError() {
+            const errorDiv = document.getElementById('error');
+            errorDiv.classList.add('hidden');
+        }
     </script>
 </body>
-
 </html>

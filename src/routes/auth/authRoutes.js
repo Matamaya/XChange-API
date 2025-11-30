@@ -102,13 +102,10 @@ router.post('/login', async (req, res) => {
 
 });
 
-
-// Elimina o comenta esto:
 router.get('/.well-known/appspecific/com.chrome.devtools.json', (req, res) => {
   res.status(200).json({});
 });
 
-// En tu app.js o server.js
 router.use((req, res, next) => {
   res.setHeader(
     'Content-Security-Policy',

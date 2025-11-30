@@ -92,3 +92,5 @@ Sobre el acceso: Cualquier usuario que esté en tu tabla usuarios (de prueba o r
 
 Inicia la app (npm run dev) y prueba el endpoint /auth/login con los usuarios de prueba. 
 El JWT se genera cuando haces POST a /auth/login con email/password correctos - la respuesta incluye el token que usas en el header
+
+para iniciar la api: node app.js
