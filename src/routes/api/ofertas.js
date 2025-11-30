@@ -45,37 +45,6 @@ router.get('/', authenticateToken, (req, res) => {
   });
 });
 
-// Ruta para obtener ofertas con información de país
-/**
- * @swagger
- * /ofertas/completo:
- *   get:
- *     summary: Obtener ofertas con información de país
- *     tags: [Ofertas]
- *     security:
- *       - BearerAuth: []
- *     responses:
- *       200:
- *         description: Ofertas completas
- *       500:
- *         description: Error del servidor
- */
-router.get('/completo', authenticateToken, (req, res) => {
-  db.query(`
-    SELECT o.*, p.nombre as pais_nombre 
-    FROM ofertas o 
-    JOIN paises p ON o.id_pais = p.id_pais 
-    ORDER BY o.id_oferta
-  `, (err, results) => {
-    if (err) {
-      console.error('Error al obtener ofertas completas:', err);
-      res.status(500).json({ error: 'Error al obtener ofertas completas' });
-    } else {
-      res.json({ ofertas: results.rows });
-    }
-  });
-});
-
 // Ruta para obtener una oferta por ID
 /**
  * @swagger

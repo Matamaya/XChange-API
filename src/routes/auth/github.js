@@ -15,7 +15,6 @@ router.get('/', (req, res) => {
 
     const scope = 'user:email';
     const githubAuthUrl = `https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=${scope}`;
-    
     res.redirect(githubAuthUrl);
 });
 
@@ -88,8 +87,15 @@ router.get('/callback', async (req, res) => {
             provider: 'github'
         });
 
+        // Guardamos el token en una cookie temporal para que viaja al navegador
+        res.cookie('access_token', jwtToken, {
+            maxAge: 60000,   // Dura 1 minuto (suficiente para llegar y guardarlo)
+            httpOnly: false,  // IMPORTANTE: false para que tu JS del frontend pueda leerla
+            path: '/',
+        });
+
         // 5. Redirigir al dashboard con el token (mediante localStorage en cliente)
-        const dashboardUrl = `http://localhost:3000/auth/github/success?token=${encodeURIComponent(jwtToken)}`;
+        const dashboardUrl = `http://localhost:3000/dashboard`;
         res.redirect(dashboardUrl);
 
     } catch (error) {
@@ -140,30 +146,7 @@ async function findOrCreateUserFromGitHub(githubUser) {
     }
 }
 
-// 4. Ruta para manejar el success (mostrar token)
-router.get('/success', (req, res) => {
-    const { token } = req.query;
-    
-    if (!token) {
-        return res.status(400).json({ error: 'Token no recibido' });
-    }
 
-    // Opción 1: Devolver HTML que guarda el token en localStorage y redirige
-    res.send(`
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <title>Autenticación exitosa</title>
-            <script>
-                localStorage.setItem('token', '${token}');
-                window.location.href = '/dashboard.html';
-            </script>
-        </head>
-        <body>
-            <p>Autenticación exitosa... redirigiendo al dashboard</p>
-        </body>
-        </html>
-    `);
-});
+
 
 module.exports = router;

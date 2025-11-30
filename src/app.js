@@ -2,28 +2,24 @@ const express = require('express');
 const app = express();
 const port = 3000;
 const db = require('./config/database');
-const path = require('path'); // ← AÑADE ESTA LÍNEA
 
 const { authenticateToken } = require('./middleware/auth');
 const authRoutes = require('./routes/auth/authRoutes');
 const githubAuthRoutes = require('./routes/auth/github');
 
-const swaggerSpec = require('./routes/docs/swagger');
 const swaggerUi = require('swagger-ui-express');
-
+const swaggerDocs = require('./routes/docs/swagger');
 
 // Middleware
 app.use(express.json());
-app.use(express.static('public')); // Servir archivos estáticos
+app.use(express.static('public')); 
 
-
-// NUEVAS RUTAS DE AUTH
+// RUTAS DE AUTH - No son funcionales?
 app.use('/auth', authRoutes);
 app.use('/auth/github', githubAuthRoutes);
 
-
-// NUEVA RUTA DOCS
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+// RUTA DOCS
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 // Ruta principal mejorada
 app.get('/', (req, res) => {
@@ -40,11 +36,11 @@ app.get('/verify-token', authenticateToken, (req, res) => {
 });
 
 // Ruta para servir el dashboard
-app.get('/dashboard.html', (req, res) => {
+app.get('/dashboard', (req, res) => {
   res.sendFile(path.join(process.cwd(), 'dashboard.html'));
 });
 
-// TUS RUTAS EXISTENTES
+// RUTAS de la bd
 app.use('/usuarios', require('./routes/api/usuarios'));
 app.use('/documentos', require('./routes/api/documentos'));
 app.use('/ofertas', require('./routes/api/ofertas'));
@@ -54,23 +50,9 @@ app.use('/solicitudes', require('./routes/api/solicitudes'));
 app.use('/roles', require('./routes/api/roles'));
 
 
-
-// Ruta de éxito para redirección Oauth
-app.get('/auth/success', (req, res) => {
-  const token = req.query.token;
-  res.json({
-    success: true,
-    message: 'Autenticación con GitHub exitosa',
-    token: token
-  });
-});
-
-
-// Elimina o comenta esto:
 app.get('/.well-known/appspecific/com.chrome.devtools.json', (req, res) => {
   res.status(200).json({});
 });
-
 
 
 // Conexión BD y servidor (mantén tu código actual)

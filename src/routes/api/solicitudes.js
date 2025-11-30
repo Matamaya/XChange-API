@@ -45,38 +45,7 @@ router.get('/', authenticateToken, (req, res) => {
   });
 });
 
-// Ruta para obtener solicitudes completas con información de usuario y oferta
-/**
- * @swagger
- * /solicitudes/completo:
- *   get:
- *     summary: Obtener solicitudes con información completa
- *     tags: [Solicitudes]
- *     security:
- *       - BearerAuth: []
- *     responses:
- *       200:
- *         description: Solicitudes completas
- *       500:
- *         description: Error del servidor
- */
-router.get('/completo', authenticateToken, (req, res) => {
-  db.query(`
-    SELECT s.*, u.email, o.nombre as oferta_nombre, p.nombre as pais_nombre
-    FROM solicitudes s
-    JOIN usuarios u ON s.id_usuario = u.id_usuario
-    JOIN ofertas o ON s.id_oferta = o.id_oferta
-    JOIN paises p ON o.id_pais = p.id_pais
-    ORDER BY s.fecha_solicitud DESC
-  `, (err, results) => {
-    if (err) {
-      console.error('Error al obtener solicitudes completas:', err);
-      res.status(500).json({ error: 'Error al obtener solicitudes completas' });
-    } else {
-      res.json({ solicitudes: results.rows });
-    }
-  });
-});
+
 
 // Ruta para obtener una solicitud por ID
 /**
@@ -205,37 +174,6 @@ router.post('/', authenticateToken, (req, res) => {
 
 
 // Ruta para actualizar el estado de una solicitud
-/**
- * @swagger
- * /solicitudes/{id}/estado:
- *   put:
- *     summary: Actualizar estado de una solicitud
- *     tags: [Solicitudes]
- *     security:
- *       - BearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - estado
- *             properties:
- *               estado:
- *                 type: string
- *     responses:
- *       200:
- *         description: Estado actualizado
- *       500:
- *         description: Error del servidor
- */
 router.put('/:id/estado', authenticateToken, (req, res) => {
   const solicitudId = req.params.id;
   const { estado } = req.body;

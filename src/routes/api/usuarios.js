@@ -45,38 +45,6 @@ router.get('/', authenticateToken, (req, res) => {
   });
 });
 
-// Ruta para obtener usuarios con información de perfil y rol
-/**
- * @swagger
- * /usuarios/completo:
- *   get:
- *     summary: Obtener usuarios con información completa
- *     tags: [Usuarios]
- *     security:
- *       - BearerAuth: []
- *     responses:
- *       200:
- *         description: Usuarios completos
- *       500:
- *         description: Error del servidor
- */
-router.get('/completo', authenticateToken, (req, res) => {
-  db.query(`
-    SELECT u.*, p.nombre, p.apellido1, p.apellido2, p.telefono, 
-           p.identificacion, p.email_tutor, p.curso, r.tipo as rol
-    FROM usuarios u 
-    LEFT JOIN perfiles p ON u.id_usuario = p.id_usuario
-    LEFT JOIN roles r ON u.id_rol = r.id_rol
-    ORDER BY u.id_usuario
-  `, (err, results) => {
-    if (err) {
-      console.error('Error al obtener usuarios completos:', err);
-      res.status(500).json({ error: 'Error al obtener usuarios completos' });
-    } else {
-      res.json({ usuarios: results.rows });
-    }
-  });
-});
 
 // Ruta para obtener un usuario por ID
 /**
@@ -117,51 +85,6 @@ router.get('/:id', authenticateToken, (req, res) => {
   });
 });
 
-// Ruta para obtener usuario completo con perfil y rol
-/**
- * @swagger
- * /usuarios/{id}/completo:
- *   get:
- *     summary: Obtener usuario completo con perfil y rol
- *     tags: [Usuarios]
- *     security:
- *       - BearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *     responses:
- *       200:
- *         description: Usuario completo
- *       404:
- *         description: Usuario no encontrado
- *       500:
- *         description: Error del servidor
- */
-router.get('/:id/completo', authenticateToken, (req, res) => {
-  const userId = req.params.id;
-  db.query(`
-    SELECT u.*, p.nombre, p.apellido1, p.apellido2, p.telefono, 
-           p.identificacion, p.email_tutor, p.curso, r.tipo as rol
-    FROM usuarios u 
-    LEFT JOIN perfiles p ON u.id_usuario = p.id_usuario
-    LEFT JOIN roles r ON u.id_rol = r.id_rol
-    WHERE u.id_usuario = $1
-  `, [userId], (err, results) => {
-    if (err) {
-      console.error('Error al obtener el usuario completo:', err);
-      res.status(500).json({ error: 'Error al obtener el usuario completo' });
-    } else {
-      if (results.rows.length === 0) {
-        res.status(404).json({ message: 'Usuario no encontrado' });
-      } else {
-        res.json({ usuario: results.rows[0] });
-      }
-    }
-  });
-});
 
 // Ruta para crear un usuario
 /**

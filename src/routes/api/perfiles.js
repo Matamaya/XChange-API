@@ -10,7 +10,6 @@ const { authenticateToken } = require('../../middleware/auth');
  */
 
 
-// Ruta para obtener todos los perfiles
 /**
  * @swagger
  * /perfiles:
@@ -87,48 +86,6 @@ router.get('/usuario/:id_usuario', authenticateToken, (req, res) => {
   });
 });
 
-// Ruta para obtener perfil completo con información de usuario
-/**
- * @swagger
- * /perfiles/completo/{id_usuario}:
- *   get:
- *     summary: Obtener perfil completo con información de usuario
- *     tags: [Perfiles]
- *     parameters:
- *       - in: path
- *         name: id_usuario
- *         required: true
- *         schema:
- *           type: integer
- *     responses:
- *       200:
- *         description: Perfil completo encontrado
- *       404:
- *         description: Perfil no encontrado
- *       500:
- *         description: Error del servidor
- */
-router.get('/completo/:id_usuario', authenticateToken, (req, res) => {
-  const userId = req.params.id_usuario;
-  db.query(`
-    SELECT p.*, u.email, u.id_rol, r.tipo as rol
-    FROM perfiles p 
-    JOIN usuarios u ON p.id_usuario = u.id_usuario
-    JOIN roles r ON u.id_rol = r.id_rol
-    WHERE p.id_usuario = $1
-  `, [userId], (err, results) => {
-    if (err) {
-      console.error('Error al obtener el perfil completo:', err);
-      res.status(500).json({ error: 'Error al obtener el perfil completo' });
-    } else {
-      if (results.rows.length === 0) {
-        res.status(404).json({ message: 'Perfil no encontrado' });
-      } else {
-        res.json({ perfil: results.rows[0] });
-      }
-    }
-  });
-});
 
 // Ruta para crear un perfil
 /**

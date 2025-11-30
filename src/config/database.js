@@ -8,7 +8,6 @@ const db = new Pool({
   database: 'postgres',
   port: 5432,
   //ssl: { rejectUnauthorized: false },
-
 });
 
 module.exports = db;

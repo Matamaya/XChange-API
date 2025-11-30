@@ -1,4 +1,3 @@
-// src/middleware/auth.js
 const { verifyAccessToken } = require('../config/jwt');
 
 const authenticateToken = (req, res, next) => {
